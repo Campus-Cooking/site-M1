@@ -16,9 +16,9 @@ const NavBar = () => (
         }}
       >
         <Container>
-          <a href="/" className="logo fs-2 fw-bold">
+          <Navbar.Brand href="/" className="logo fs-2 fw-bold">
             Campus Cooking
-          </a>
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-between">
             <Nav className="nav-links">
