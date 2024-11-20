@@ -76,7 +76,7 @@ const RecipeCard: React.FC<{
   <div className="recipe-card">
     <div className="recipe-image-container">
       <img src={recipe.imageUrl} alt={recipe.title} className="recipe-image" />
-      <button aria-label="Like">
+      <button aria-label="Like" className="d-none d-md-block">
         <Heart />
       </button>
     </div>

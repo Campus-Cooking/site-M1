@@ -19,7 +19,7 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
   if (recipe.isAd) {
     return (
       <div className="recipe-card ad">
-        <div className="ad-content">
+        <div className="ad-content d-none d-md-block">
           <h3>Don&apos;t forget to eat healthy food</h3>
           <p>www.collegecooking.com</p>
         </div>
