@@ -1,12 +1,16 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 
 const AddRecipe: React.FC = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [prepTime, setPrepTime] = useState('');
+  const [servings, setServings] = useState('');
+  const [costPerServing, setCostPerServing] = useState('');
   const [ingredients, setIngredients] = useState('');
-  const [instructions, setInstructions] = useState('');
+  const [dietaryInfo, setDietaryInfo] = useState('');
+  const [vendorId, setVendorId] = useState('');
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,8 +25,12 @@ const AddRecipe: React.FC = () => {
         body: JSON.stringify({
           title,
           description,
-          ingredients,
-          instructions,
+          prepTime: parseInt(prepTime, 10),
+          servings: parseInt(servings, 10),
+          costPerServing: parseFloat(costPerServing),
+          ingredients: ingredients.split(',').map((ing) => ing.trim()),
+          dietaryInfo: dietaryInfo.split(',').map((diet) => diet.trim()), 
+          vendorId: parseInt(vendorId, 10),
         }),
       });
 
@@ -30,8 +38,12 @@ const AddRecipe: React.FC = () => {
         setMessage('Recipe added successfully!');
         setTitle('');
         setDescription('');
+        setPrepTime('');
+        setServings('');
+        setCostPerServing('');
         setIngredients('');
-        setInstructions('');
+        setDietaryInfo('');
+        setVendorId('');
       } else {
         setMessage('Failed to add recipe. Please try again.');
       }
@@ -62,6 +74,34 @@ const AddRecipe: React.FC = () => {
           />
         </div>
         <div>
+          <label>Prep Time (minutes):</label>
+          <input
+            type="number"
+            value={prepTime}
+            onChange={(e) => setPrepTime(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Servings:</label>
+          <input
+            type="number"
+            value={servings}
+            onChange={(e) => setServings(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Cost Per Serving:</label>
+          <input
+            type="number"
+            step="0.01"
+            value={costPerServing}
+            onChange={(e) => setCostPerServing(e.target.value)}
+            required
+          />
+        </div>
+        <div>
           <label>Ingredients:</label>
           <textarea
             value={ingredients}
@@ -70,10 +110,19 @@ const AddRecipe: React.FC = () => {
           />
         </div>
         <div>
-          <label>Instructions:</label>
-          <textarea
-            value={instructions}
-            onChange={(e) => setInstructions(e.target.value)}
+          <label>Dietary Info:</label>
+          <input
+            type="text"
+            value={dietaryInfo}
+            onChange={(e) => setDietaryInfo(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Vendor ID:</label>
+          <input
+            type="number"
+            value={vendorId}
+            onChange={(e) => setVendorId(e.target.value)}
             required
           />
         </div>
