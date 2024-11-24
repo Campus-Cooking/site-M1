@@ -30,37 +30,10 @@ enum Role {
 }
 
 model Recipe {
-  id             Int          @id @default(autoincrement())
-  title          String
-  description    String
-  prepTime       Int
-  servings       Int
-  costPerServing Float
-  dietaryInfo    Dietary[]
-  ingredients    Ingredient[]
-  vendorId       Int
-  vendor         Vendor       @relation(fields: [vendorId], references: [id])
-}
-
-enum Dietary {
-  Vegan
-  Vegetarian
-  GlutenFree
-  NutFree
-  DairyFree
-}
-
-model Ingredient {
-  id       Int      @id @default(autoincrement())
-  name     String
-  recipes  Recipe[] 
-}
-
-model Vendor {
-  id          Int       @id @default(autoincrement())
-  firstName   String
-  lastName    String
-  email       String    @unique
-  password    String
-  recipes     Recipe[]  
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  ingredients String
+  instructions String
+  createdAt   DateTime @default(now())
 }
