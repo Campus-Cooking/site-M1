@@ -5,51 +5,43 @@ import React, { useState } from 'react';
 const AddRecipe: React.FC = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [prepTime, setPrepTime] = useState('');
-  const [servings, setServings] = useState('');
-  const [costPerServing, setCostPerServing] = useState('');
+  const [imageURL, setImageURL] = useState('');
   const [ingredients, setIngredients] = useState('');
-  const [dietaryInfo, setDietaryInfo] = useState('');
-  const [vendorId, setVendorId] = useState('');
-  const [message, setMessage] = useState('');
+  const [instructions, setInstructions] = useState('');
+  const [categories, setCategories] = useState('');
+  const [appliances, setAppliances] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch('/api/add-recipe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title,
-          description,
-          prepTime: parseInt(prepTime, 10),
-          servings: parseInt(servings, 10),
-          costPerServing: parseFloat(costPerServing),
-          ingredients: ingredients.split(',').map((ing) => ing.trim()),
-          dietaryInfo: dietaryInfo.split(',').map((diet) => diet.trim()), 
-          vendorId: parseInt(vendorId, 10),
-        }),
-      });
+    const response = await fetch('/api/add-recipe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        imageURL,
+        ingredients: ingredients.split(',').map((ing) => ing.trim()),
+        instructions,
+        categories: categories.split(',').map((cat) => cat.trim()),
+        appliances: appliances.split(',').map((app) => app.trim()),
+      }),
+    });
 
-      if (response.ok) {
-        setMessage('Recipe added successfully!');
-        setTitle('');
-        setDescription('');
-        setPrepTime('');
-        setServings('');
-        setCostPerServing('');
-        setIngredients('');
-        setDietaryInfo('');
-        setVendorId('');
-      } else {
-        setMessage('Failed to add recipe. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error adding recipe:', error);
-      setMessage('An error occurred. Please try again later.');
+    if (response.ok) {
+      // Clear form fields after successful submission
+      setTitle('');
+      setDescription('');
+      setImageURL('');
+      setIngredients('');
+      setInstructions('');
+      setCategories('');
+      setAppliances('');
+      alert('Recipe added successfully!');
+    } else {
+      alert('Failed to add recipe. Please try again.');
     }
   };
 
@@ -71,34 +63,15 @@ const AddRecipe: React.FC = () => {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Prep Time (minutes):</label>
-          <input
-            type="number"
-            value={prepTime}
-            onChange={(e) => setPrepTime(e.target.value)}
             required
           />
         </div>
         <div>
-          <label>Servings:</label>
+          <label>Image URL:</label>
           <input
-            type="number"
-            value={servings}
-            onChange={(e) => setServings(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Cost Per Serving:</label>
-          <input
-            type="number"
-            step="0.01"
-            value={costPerServing}
-            onChange={(e) => setCostPerServing(e.target.value)}
-            required
+            type="text"
+            value={imageURL}
+            onChange={(e) => setImageURL(e.target.value)}
           />
         </div>
         <div>
@@ -110,25 +83,33 @@ const AddRecipe: React.FC = () => {
           />
         </div>
         <div>
-          <label>Dietary Info:</label>
-          <input
-            type="text"
-            value={dietaryInfo}
-            onChange={(e) => setDietaryInfo(e.target.value)}
+          <label>Instructions:</label>
+          <textarea
+            value={instructions}
+            onChange={(e) => setInstructions(e.target.value)}
+            required
           />
         </div>
         <div>
-          <label>Vendor ID:</label>
+          <label>Categories:</label>
           <input
-            type="number"
-            value={vendorId}
-            onChange={(e) => setVendorId(e.target.value)}
+            type="text"
+            value={categories}
+            onChange={(e) => setCategories(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Appliances:</label>
+          <input
+            type="text"
+            value={appliances}
+            onChange={(e) => setAppliances(e.target.value)}
             required
           />
         </div>
         <button type="submit">Add Recipe</button>
       </form>
-      {message && <p>{message}</p>}
     </div>
   );
 };
