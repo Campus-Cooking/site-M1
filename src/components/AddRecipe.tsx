@@ -31,7 +31,6 @@ const AddRecipe: React.FC = () => {
     });
 
     if (response.ok) {
-      // Clear form fields after successful submission
       setTitle('');
       setDescription('');
       setImageURL('');
