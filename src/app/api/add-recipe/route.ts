@@ -16,12 +16,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } = req.body;
 
     try {
-      // Validate required fields
       if (!title || !description || !ingredients || !instructions) {
         return res.status(400).json({ message: 'Missing required fields' });
       }
 
-      // Validate categories and appliances
       const validCategories = categories.every((category: string) =>
         Object.values(Category).includes(category as Category)
       );
@@ -36,9 +34,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ message: 'Invalid appliance values' });
       }
 
-      const userId = 1; // Replace this with actual logic to fetch the user ID
+      const userId = 1; // Replace this with code to get actual userID
 
-      // Create recipe
       const recipe = await prisma.recipe.create({
         data: {
           title,
