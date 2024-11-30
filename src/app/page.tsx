@@ -10,6 +10,7 @@ import RecipeGrid2 from '@/components/RecipeGrid2';
 import EmailSubscribe from '@/components/EmailSubscribe';
 import Footer from '@/components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import RecipePost from '@/components/RecipePost';
 
 export default function Home() {
   return (
