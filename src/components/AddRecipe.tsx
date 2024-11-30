@@ -10,39 +10,47 @@ const AddRecipe: React.FC = () => {
   const [instructions, setInstructions] = useState('');
   const [categories, setCategories] = useState('');
   const [appliances, setAppliances] = useState('');
+  const [owner, setOwner] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const response = await fetch('/api/add-recipe', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        imageURL,
-        ingredients: ingredients.split(',').map((ing) => ing.trim()),
-        instructions,
-        categories: categories.split(',').map((cat) => cat.trim()),
-        appliances: appliances.split(',').map((app) => app.trim()),
-      }),
-    });
-
-    if (response.ok) {
-      setTitle('');
-      setDescription('');
-      setImageURL('');
-      setIngredients('');
-      setInstructions('');
-      setCategories('');
-      setAppliances('');
-      alert('Recipe added successfully!');
-    } else {
-      alert('Failed to add recipe. Please try again.');
-    }
-  };
+  
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+    
+      const response = await fetch('/api/add-recipe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          imageURL,
+          ingredients: ingredients.split(',').map((ing) => ing.trim()),
+          instructions,
+          categories: categories.split(',').map((cat) => cat.trim()),
+          appliances: appliances.split(',').map((app) => app.trim()),
+          owner, 
+        }),
+      });
+    
+      if (response.ok) {
+        setTitle('');
+        setDescription('');
+        setImageURL('');
+        setIngredients('');
+        setInstructions('');
+        setCategories('');
+        setAppliances('');
+        setOwner('');
+        alert('Recipe added successfully!');
+      } else {
+        const errorText = await response.text();
+        alert(`Failed to add recipe: ${errorText}`);
+      }
+    };    
+  };  
 
   return (
     <div>
@@ -95,7 +103,6 @@ const AddRecipe: React.FC = () => {
             type="text"
             value={categories}
             onChange={(e) => setCategories(e.target.value)}
-            required
           />
         </div>
         <div>
@@ -104,6 +111,14 @@ const AddRecipe: React.FC = () => {
             type="text"
             value={appliances}
             onChange={(e) => setAppliances(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Owner:</label>
+          <input
+            type="text"
+            value={owner}
+            onChange={(e) => setOwner(e.target.value)}
             required
           />
         </div>

@@ -1,98 +1,91 @@
 import { PrismaClient, Role, Appliances, Category } from '@prisma/client';
 import { hash } from 'bcrypt';
-import settings from '../config/settings.development.json';
+import * as config from '../config/settings.development.json';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  try {
-    // Clear existing data
-    // Just using this in the developement process to make it easier to work with database
-    await prisma.recipe.deleteMany();
-    await prisma.ingredient.deleteMany();
-    await prisma.user.deleteMany();
+  console.log('Seeding the database...');
 
-    console.log('Cleared existing data');
+  // Create users concurrently
+  const userPromises = config.defaultUsers.map(async (user) => {
+    const hashedPassword = await hash(user.password, 10);
+    console.log(`  Creating user: ${user.email}`);
+    return prisma.user.upsert({
+      where: { email: user.email },
+      update: {},
+      create: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        password: hashedPassword,
+        role: user.role as Role,
+      },
+    });
+  });
+  await Promise.all(userPromises);
 
-    // Create users
-    const users = await Promise.all(
-      settings.defaultUsers.map(async (user) => {
-        const hashedPassword = await hash(user.password, 10);
-        return prisma.user.create({
-          data: {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            password: hashedPassword,
-            role: user.role as Role,
-          },
-        });
-      }),
-    );
+  // Create ingredients concurrently
+  console.log('Creating ingredients...');
+  const ingredientMap = new Map<string, number>();
+  const ingredientPromises = config.defaultIngredients.map(async (ingredient) => {
+    const createdIngredient = await prisma.ingredient.upsert({
+      where: { name: ingredient.name },
+      update: {},
+      create: {
+        name: ingredient.name,
+      },
+    });
+    ingredientMap.set(ingredient.name, createdIngredient.id);
+    return createdIngredient;
+  });
+  await Promise.all(ingredientPromises);
 
-    console.log(`Created ${users.length} users`);
+  // Create recipes concurrently
+  console.log('Creating recipes...');
+  const recipePromises = config.defaultRecipes.map(async (recipe) => {
+    console.log(`  Adding recipe: ${recipe.title}`);
 
-    // Create ingredients
-    const ingredients = await Promise.all(
-      settings.defaultIngredients.map((ingredient) => prisma.ingredient.create({
-        data: {
-          name: ingredient.name,
+    // Find the user (owner) by email
+    const owner = await prisma.user.findUnique({
+      where: { email: recipe.owner },
+    });
+
+    if (!owner) {
+      console.error(`Owner not found: ${recipe.owner}`);
+      return;
+    }
+
+    // Map ingredient names to ingredient IDs
+    const ingredientIDs = recipe.ingredients
+      .map((name) => ingredientMap.get(name))
+      .filter((id): id is number => id !== undefined);
+
+    await prisma.recipe.create({
+      data: {
+        title: recipe.title,
+        description: recipe.description,
+        imageURL: recipe.imageURL,
+        instructions: recipe.instructions,
+        categories: recipe.categories as Category[],
+        appliances: recipe.appliances as Appliances[],
+        owner: recipe.owner,
+        user: { connect: { id: owner.id } }, // Link recipe to user
+        ingredients: {
+          connect: ingredientIDs.map((id) => ({ id })),
         },
-      })),
-    );
+      },
+    });
+  });
+  await Promise.all(recipePromises);
 
-    console.log(`Created ${ingredients.length} ingredients`);
-
-    // Create a map of ingredient names to their IDs for easy lookup
-    const ingredientMap = new Map(
-      ingredients.map((ingredient) => [ingredient.name, ingredient.id]),
-    );
-
-    // Create recipes
-    const recipes = await Promise.all(
-      settings.defaultRecipes.map(async (recipe) => {
-        // Find the first user with STUDENT role for the recipe
-        const defaultAuthor = users.find((user) => user.role === 'STUDENT') || users[0];
-
-        // Get ingredient IDs for the recipe
-        const ingredientIds = recipe.ingredients
-          .map((ingredientName) => ingredientMap.get(ingredientName))
-          .filter((id): id is number => id !== undefined);
-
-        return prisma.recipe.create({
-          data: {
-            title: recipe.title,
-            description: recipe.description,
-            imageURL: recipe.imageURL,
-            instructions: recipe.instructions,
-            categories: {
-              set: recipe.categories.map((category) => category as Category),
-            },
-            appliances: {
-              set: recipe.appliances.map((appliance) => appliance as Appliances),
-            },
-            ingredients: {
-              connect: ingredientIds.map((id) => ({ id })),
-            },
-            userID: defaultAuthor.id,
-          },
-        });
-      }),
-    );
-
-    console.log(`Created ${recipes.length} recipes`);
-    console.log('Database seeding completed successfully!');
-  } catch (error) {
-    console.error('Error seeding database:', error);
-    throw error;
-  }
+  console.log('Database seeding completed!');
 }
 
 main()
-  .catch((e) => {
+  .then(() => prisma.$disconnect())
+  .catch(async (e) => {
     console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
     await prisma.$disconnect();
+    process.exit(1);
   });
