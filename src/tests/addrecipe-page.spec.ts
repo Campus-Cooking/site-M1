@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 // Use authenticated state for this test
 test.use({
-  storageState: 'user-auth.json', // You'll need to create this auth state file
+  storageState: 'user-auth.json',
 });
 
 test('Add Recipe Page', async ({ page }) => {
