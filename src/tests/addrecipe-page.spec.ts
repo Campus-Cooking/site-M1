@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, defineConfig } from '@playwright/test';
 
 // Use authenticated state for this test
 test.use({
