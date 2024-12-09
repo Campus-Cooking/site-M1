@@ -1,95 +1,119 @@
-import React from 'react';
-import { Facebook, Twitter, Instagram } from 'lucide-react';
+'use client';
 
-const RecipePost = () => {
+import React, { useState, useEffect } from 'react';
+import { Clock, Utensils } from 'lucide-react';
+
+interface RecipePostProps {
+  slug: string;
+}
+
+interface Recipe {
+  id: number;
+  title: string;
+  imageURL: string;
+  cookTime: string;
+  description: string;
+  ingredients: Array<{
+    id: number;
+    name: string;
+    quantity: string;
+  }>;
+  instructions: string;
+  categories: Array<{
+    id: number;
+    category: string;
+  }>;
+  appliances: Array<{
+    id: number;
+    appliance: string;
+  }>;
+  email: string;
+  createdAt: string;
+}
+
+const RecipePost: React.FC<RecipePostProps> = ({ slug }) => {
+  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        const response = await fetch(`/api/recipes/${slug}`);
+        if (!response.ok) {
+          throw new Error('Recipe not found');
+        }
+        const data = await response.json();
+        setRecipe(data);
+      } catch (err) {
+        setError('Failed to load recipe');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecipe();
+  }, [slug]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+  if (!recipe) return <div>Recipe not found</div>;
+
   return (
     <article className="recipe-post">
-      <header className="recipe-post-header">
-        <h1>Chicken Wings in the Air Fryer</h1>
-      </header>
-      <div className="author-info">
-        <img
-          src="/landing-img/johnsmith.png"
-          alt="John Smith"
-          className="author-avatar"
-        />
-        <span className="author-name">John Smith</span>
-        <span className="post-date">10 Nov 2024</span>
+      <div className="recipe-post-header">
+        <h1>{recipe.title}</h1>
+        <div className="recipe-meta">
+          <div className="meta-item">
+            <Clock />
+            <span>{recipe.cookTime}</span>
+          </div>
+          <div className="meta-item">
+            <Utensils />
+            <span>{recipe.categories.map(c => c.category).join(', ')}</span>
+          </div>
+        </div>
       </div>
-      <p className="recipe-post-description">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac
-        ultrices odio. Nulla at congue diam, at dignissim turpis. Ut vehicula
-        sed velit a faucibus. In feugiat vestibulum velit vel pulvinar.
-      </p>
 
       <div className="recipe-image-container">
         <img
-          src="/landing-img/chickenwing.jpeg"
-          alt="Bone Broth Ramen"
+          src={recipe.imageURL}
+          alt={recipe.title}
           className="recipe-image"
         />
       </div>
 
       <div className="recipe-content">
-        <div className="main-content">
-          <section className="recipe-section">
-            <h2>Recipe;</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              ac ultrices odio. Nulla at congue diam, at dignissim turpis. Ut
-              vehicula sed velit a faucibus. In feugiat vestibulum velit vel
-              pulvinar. Fusce id mollis ex. Praesent feugiat elementum ex ut
-              suscipit.
-            </p>
-          </section>
-
-          <section className="recipe-section">
-            <h2>STEPS</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              ac ultrices odio. Nulla at congue diam, at dignissim turpis. Ut
-              vehicula sed velit a faucibus. In feugiat vestibulum velit vel
-              pulvinar. Fusce id mollis ex. Praesent feugiat elementum ex ut
-              suscipit.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              ac ultrices odio. Nulla at congue diam, at dignissim turpis. Ut
-              vehicula sed velit a faucibus. In feugiat vestibulum velit vel
-              pulvinar. Fusce id mollis ex. Praesent feugiat elementum ex ut
-              suscipit.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              ac ultrices odio. Nulla at congue diam, at dignissim turpis. Ut
-              vehicula sed velit a faucibus. In feugiat vestibulum velit vel
-              pulvinar. Fusce id mollis ex. Praesent feugiat elementum ex ut
-              suscipit.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              ac ultrices odio. Nulla at congue diam, at dignissim turpis. Ut
-              vehicula sed velit a faucibus. In feugiat vestibulum velit vel
-              pulvinar. Fusce id mollis ex. Praesent feugiat elementum ex ut
-              suscipit.
-            </p>
-          </section>
+        <div className="recipe-post-description">
+          <h2>Description</h2>
+          <p>{recipe.description}</p>
         </div>
 
-        <aside className="share-sidebar">
-          <h3>SHARE THIS ON:</h3>
-          <div className="social-links">
-            <a href="#" className="social-link">
-              <Facebook size={24} />
-            </a>
-            <a href="#" className="social-link">
-              <Twitter size={24} />
-            </a>
-            <a href="#" className="social-link">
-              <Instagram size={24} />
-            </a>
-          </div>
-        </aside>
+        <div className="recipe-ingredients">
+          <h2>Ingredients</h2>
+          <ul>
+            {recipe.ingredients.map((ingredient) => (
+              <li key={ingredient.id}>
+                {ingredient.quantity} {ingredient.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="recipe-instructions">
+          <h2>Instructions</h2>
+          <p>{recipe.instructions}</p>
+        </div>
+
+        <div className="recipe-appliances">
+          <h2>Required Appliances</h2>
+          <ul>
+            {recipe.appliances.map((appliance) => (
+              <li key={appliance.id}>{appliance.appliance}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </article>
   );

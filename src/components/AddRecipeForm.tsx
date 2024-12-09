@@ -105,6 +105,17 @@ const AddRecipeForm = ({ user }: { user: User }) => {
             {errors.title && <p className="error">{errors.title.message as string}</p>}
           </div>
 
+          {/* Cook Time */}
+          <div className="input-group">
+            <label>Cook Time</label>
+            <input
+              type="text"
+              {...register('cookTime')}
+              placeholder="e.g., 15 mins"
+            />
+            {errors.cookTime && <p className="error">{errors.cookTime.message as string}</p>}
+          </div>
+
           {/* Ingredients */}
           <div className="input-group">
             <label>Ingredients</label>

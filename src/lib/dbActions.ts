@@ -15,6 +15,7 @@ interface RecipeData {
   title: string;
   description: string;
   imageURL: string;
+  cookTime: string;
   instructions: string;
   appliances: string[];
   ingredients: Ingredient[];
@@ -46,6 +47,7 @@ export async function addRecipe(recipeData: RecipeData) {
         title: recipeData.title,
         description: recipeData.description,
         imageURL: recipeData.imageURL,
+        cookTime: recipeData.cookTime,
         instructions: recipeData.instructions,
         email: recipeData.email,
         ingredients: {

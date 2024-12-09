@@ -6,9 +6,25 @@ import { Heart, Clock, Utensils } from 'lucide-react';
 interface Recipe {
   id: number;
   title: string;
-  imageUrl: string;
+  imageURL: string;
+  description: string;
   cookTime: string;
-  category: string;
+  ingredients: Array<{
+    id: number;
+    name: string;
+    quantity: string;
+  }>;
+  instructions: string;
+  categories: Array<{
+    id: number;
+    category: string;
+  }>;
+  appliances: Array<{
+    id: number;
+    appliance: string;
+  }>;
+  email: string;
+  createdAt: string;
 }
 
 // Recipe/test data - to be replace with links to database
@@ -105,6 +121,11 @@ const SearchBar: React.FC = () => {
 const RecipeCard: React.FC<{
   recipe: Recipe;
 }> = ({ recipe }) => {
+  const slug = recipe.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+
   // Function to handle image errors
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.src = '/fallback-image.png'; // Add a fallback image
@@ -112,17 +133,17 @@ const RecipeCard: React.FC<{
   };
 
   // Log the image URL to debug
-  console.log('Recipe image URL:', recipe.imageUrl);
+  console.log('Recipe image URL:', recipe.imageURL);
 
   return (
-    <div className="recipe-card">
+    <a href={`/recipes/${slug}`} className="recipe-card">
       <div className="recipe-image-container">
         <img
-          src={recipe.imageUrl}
+          src={recipe.imageURL}
           alt={recipe.title}
           className="recipe-image"
           onError={handleImageError}
-          loading="lazy" // Add lazy loading for better performance
+          loading="lazy"
         />
         <button aria-label="Like" className="d-none d-md-block">
           <Heart />
@@ -137,11 +158,11 @@ const RecipeCard: React.FC<{
           </div>
           <div className="meta-item">
             <Utensils />
-            <span>{recipe.category}</span>
+            <span>{recipe.categories.map(cat => cat.category).join(', ')}</span>
           </div>
         </div>
       </div>
-    </div>
+    </a>
   );
 };
 
@@ -215,16 +236,28 @@ const Recipes: React.FC = () => {
           {
             id: 1,
             title: 'Superfood Fruit Salad',
-            imageUrl: '/landing-img/acai.png',
+            imageURL: '/landing-img/acai.png',
             cookTime: '15 mins',
-            category: 'Healthy',
+            categories: [{ id: 1, category: 'Healthy' }],
+            description: 'A healthy fruit salad',
+            instructions: 'Mix all fruits together',
+            ingredients: [],
+            appliances: [],
+            email: 'john@foo.com',
+            createdAt: new Date().toISOString(),
           },
           {
             id: 2,
             title: 'Steak frites in your dorm',
-            imageUrl: '/landing-img/steakmeal.png',
+            imageURL: '/landing-img/steakmeal.png',
             cookTime: '30 mins',
-            category: 'Western',
+            categories: [{ id: 2, category: 'Western' }],
+            description: 'Classic steak and fries',
+            instructions: 'Cook steak and fries',
+            ingredients: [],
+            appliances: [],
+            email: 'john@foo.com',
+            createdAt: new Date().toISOString(),
           },
         ]);
       } finally {

@@ -27,6 +27,7 @@
         "title": "Pancakes",
         "description": "Fluffy pancakes for breakfast.",
         "imageURL": "https://example.com/pancakes.jpg",
+        "cookTime": "15 mins",
         "ingredients": [
           {
             "name": "Flour",
@@ -58,6 +59,7 @@
         "title": "Grilled Cheese",
         "description": "A quick and easy lunch option.",
         "imageURL": "https://example.com/grilled_cheese.jpg",
+        "cookTime": "10 mins",
         "ingredients": [
           {
             "name": "Bread",

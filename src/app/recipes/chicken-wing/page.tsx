@@ -8,7 +8,7 @@ export default function RecipePage() {
     <div className="min-h-screen bg-white">
       <NavBar />
       <main className="container mx-auto px-4 py-8">
-        <RecipePost />
+        <RecipePost slug="chicken-wing" />
       </main>
       <Footer />
     </div>
