@@ -14,14 +14,14 @@ const Landing = () => (
       <div className="left-panel">
         <div className="hot-recipe-badge">
           <img src="/landing-img/scroll.png" alt="Hot recipe icon" width={22} />
-          <span>Hot Recipes</span>
+          <span>Popular Recipes</span>
         </div>
 
-        <h1 className="recipe-title">Air Fryer Chicken</h1>
-        <h1 className="recipe-title">Wings!</h1>
+        <h1 className="recipe-title">Toaster Oven</h1>
+        <h1 className="recipe-title">Granola</h1>
         <h1 className="recipe-title" />
         <p className="recipe-description">
-          Make these delicious, nutritious Air fryer wings
+          Make this delicious, healthy, morning sweet treat in your rice cooker!
         </p>
 
         <div className="metadata-container">
@@ -46,15 +46,15 @@ const Landing = () => (
                 fill="black"
               />
             </svg>
-            <span>Chicken</span>
+            <span>Baking</span>
           </div>
         </div>
 
-        <div className="pt-8 mt-8">
+        <div className="pt-8 mt-8 author-section">
           <div className="footer pt-10">
-            <div className="author d-none d-md-block">
+            <div className="author">
               <img
-                src="/landing-img/JohnSmith.png"
+                src="https://i.pinimg.com/200x150/d3/7e/84/d37e843d31252c02e0b6119d126d6014.jpg"
                 alt="John Smith"
                 className="author-image"
               />
@@ -64,7 +64,7 @@ const Landing = () => (
               </div>
             </div>
 
-            <Link href="/recipes/chicken-wing" className="view-recipe-btn">
+            <Link href="/recipes/granola" className="view-recipe-btn">
               <span>View Recipe</span>
               <ChevronRight size={24} />
             </Link>
@@ -74,9 +74,15 @@ const Landing = () => (
 
       <div className="right-panel">
         <img
-          src="/landing-img/chickenwing.jpeg"
-          alt="Featured Recipe"
-          className="featured-image"
+          src="https://toasterovenlove.com/wp-content/uploads/2016/05/1-2.jpg"
+          alt="Delicious granola a toaster oven"
+          className="h-full w-full object-cover"
+          style={{
+            height: '100%',
+            width: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+          }}
         />
       </div>
     </div>
