@@ -146,7 +146,7 @@ const Recipes: React.FC = () => {
   const fetchRecipes = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/recipes');
+      const response = await fetch(`/api/recipes?query=${encodeURIComponent(query)}`);
       if (!response.ok) throw new Error('Could not fetch recipes');
       const data = await response.json();
       setRecipes(data);
@@ -158,6 +158,7 @@ const Recipes: React.FC = () => {
       setLoading(false);
     }
   };
+  
 
   // Apply filters based on query parameters
   useEffect(() => {
@@ -170,7 +171,7 @@ const Recipes: React.FC = () => {
 
   useEffect(() => {
     fetchRecipes();
-  }, []);
+  }, [query]);
 
   useEffect(() => {
     let filteredRecipes = [...originalRecipes];
