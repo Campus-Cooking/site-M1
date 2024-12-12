@@ -119,30 +119,6 @@ export async function searchRecipes(query: string) {
     throw error;
   }
 }
-/**
- * Searches recipes in the database by a given query.
- * @param query A string to search within recipe titles.
- */
-export async function searchRecipes(query: string) {
-  try {
-    return await prisma.recipe.findMany({
-      where: {
-        title: {
-          contains: query, // Filter by title containing the query string
-          mode: 'insensitive', // Case-insensitive search
-        },
-      },
-      include: {
-        ingredients: true,
-        categories: true,
-        appliances: true,
-      },
-    });
-  } catch (error) {
-    console.error('Failed to search recipes', error);
-    throw error;
-  }
-}
 
 /**
  * Creates a new user in the database.
