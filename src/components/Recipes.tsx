@@ -40,9 +40,19 @@ interface Recipe {
 // Search bar component
 const SearchBar: React.FC<{
   query: string;
-  onSearchChange: (query: string) => void;
+  onSearch: (query: string) => void;
   onReset: () => void;
-}> = ({ query, onSearchChange, onReset }) => {
+}> = ({ query, onSearch, onReset }) => {
+  const [localQuery, setLocalQuery] = useState(query);
+
+  const handleSearch = () => {
+    onSearch(localQuery);
+  };
+
+  const handleReset = () => {
+    setLocalQuery(''); 
+    onReset(); 
+  };
   return (
     <div className="search-bar-container">
       <div className="search-bar">
@@ -50,11 +60,12 @@ const SearchBar: React.FC<{
           type="search"
           placeholder="Search recipes..."
           className="search-placeholder"
-          value={query}
-          onChange={(e) => onSearchChange(e.target.value)}
+          value={localQuery}
+          onChange={(e) => setLocalQuery(e.target.value)}
           required
         />
-        {query && (
+        
+        {localQuery && (
           <div className="clear-button" onClick={onReset}>
             <span className="clear-button-text"></span>
           </div>
@@ -188,7 +199,7 @@ const Recipes: React.FC = () => {
     <div className="recipe-page">
       <div className="recipe-header">
         <h1 className="recipe-title">Level Up Your Health and Well-Being With These Recipes!</h1>
-        <SearchBar query={query} onSearchChange={setQuery} onReset={resetFilters} />
+        <SearchBar query={query} onSearch={setQuery} onReset={resetFilters} />
         <div className="filter-container centered-filters">
           <select
             value={selectedCategory || ''}
