@@ -45,7 +45,6 @@ model Recipe {
   email          String            // Changed from userID/owner
   user           User              @relation(fields: [email], references: [email])
   createdAt      DateTime          @default(now())
-  cooktime       String
 }
 
 
