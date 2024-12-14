@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Clock, Utensils } from 'lucide-react';
-import './RecipePost.css';
 
 interface RecipePostProps {
   slug: string;
