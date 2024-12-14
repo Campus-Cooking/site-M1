@@ -3,7 +3,7 @@ import Recipes from '../../components/Recipes';
 import NavBarSignedin from '@/components/NavBarSignedin';
 import Footer from '@/components/Footer';
 import '../globals.css';
-import './recipespage.css';
+import './recipepost.css';
 import EmailSubscribe from '@/components/EmailSubscribe';
 
 export default function recipes() {

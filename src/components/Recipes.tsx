@@ -137,18 +137,35 @@ const Recipes: React.FC = () => {
 
   useEffect(() => {
     let filteredRecipes = [...originalRecipes];
+
+    // Filter by category
     if (selectedCategory) {
       filteredRecipes = filteredRecipes.filter((recipe) =>
         recipe.categories.some((cat) => cat.category === selectedCategory)
       );
     }
+
+    // Filter by appliance
     if (selectedAppliance) {
       filteredRecipes = filteredRecipes.filter((recipe) =>
         recipe.appliances.some((app) => app.appliance === selectedAppliance)
       );
     }
+
+    // To search for recipes
+    if (query) {
+      const lowerCaseQuery = query.toLowerCase();
+      filteredRecipes = filteredRecipes.filter((recipe) =>
+        recipe.title.toLowerCase().includes(lowerCaseQuery) ||
+        recipe.description.toLowerCase().includes(lowerCaseQuery) ||
+        recipe.ingredients.some((ingredient) =>
+          ingredient.name.toLowerCase().includes(lowerCaseQuery)
+        )
+      );
+    }
+
     setRecipes(filteredRecipes);
-  }, [selectedCategory, selectedAppliance, originalRecipes]);
+  }, [selectedCategory, selectedAppliance, query, originalRecipes]);
 
   return (
     <div className="recipe-page">
