@@ -2,7 +2,6 @@ import RecipePost from '@/components/RecipePost';
 import NavBarSignedin from '@/components/NavBarSignedin';
 import Footer from '@/components/Footer';
 
-// Add a new CSS module for this page
 import './style.css';
 
 interface PageProps {
@@ -23,4 +22,4 @@ export default function RecipePage({ params }: PageProps) {
       <Footer />
     </div>
   );
-} 
+}

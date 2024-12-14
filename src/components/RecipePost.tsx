@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Clock, Utensils } from 'lucide-react';
+import './RecipePost.css';
 
 interface RecipePostProps {
   slug: string;
@@ -68,23 +69,25 @@ const RecipePost: React.FC<RecipePostProps> = ({ slug }) => {
         <h1>{recipe.title}</h1>
         <div className="recipe-meta">
           <div className="meta-item">
-            <Clock />
+            <Clock size={20} />
             <span>{recipe.cookTime}</span>
           </div>
           <div className="meta-item">
-            <Utensils />
+            <Utensils size={20} />
             <span>{recipe.categories.map((c) => c.category).join(', ')}</span>
           </div>
         </div>
       </div>
 
-      <div className="recipe-image-container">
-        <img
-          src={recipe.imageURL}
-          alt={recipe.title}
-          className="recipe-image"
-        />
-      </div>
+      {recipe.imageURL && (
+        <div className="recipe-image-container">
+          <img
+            src={recipe.imageURL}
+            alt={recipe.title}
+            className="recipe-image"
+          />
+        </div>
+      )}
 
       <div className="recipe-content">
         <div className="recipe-post-description">
@@ -102,23 +105,20 @@ const RecipePost: React.FC<RecipePostProps> = ({ slug }) => {
             ))}
           </ul>
         </div>
-        
+
         <div className="recipe-instructions">
-  <h2>Instructions</h2>
-  {recipe.instructions.split('\n').map((step, index) => (
-    <React.Fragment key={index}>
-      <p>{step.trim()}</p>
-      {index < recipe.instructions.split('\n').length - 1 && <div className="step-divider"></div>}
-    </React.Fragment>
-  ))}
-</div>
+          <h2>Instructions</h2>
+          {recipe.instructions.split('\n').map((step, index) => (
+            <p key={index}>{step.trim()}</p>
+          ))}
+        </div>
 
         <div className="recipe-appliances">
           <h2>Required Appliances</h2>
           <ul>
             {recipe.appliances.map((appliance) => (
               <li key={appliance.id}>
-                {appliance.appliance.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                {appliance.appliance.replace(/([a-z])([A-Z])/g, '$1 $2')}
               </li>
             ))}
           </ul>

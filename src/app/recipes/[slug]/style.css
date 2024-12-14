@@ -1,42 +1,111 @@
 .recipe-post-detail {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 2rem;
 }
-  
-:global(.recipe-post-detail h1) {
-  font-size: 2rem;
-  line-height: 1.2;
-  margin-bottom: 1.5rem;
+
+.recipe-post-header {
+  margin-bottom: 2rem;
 }
-  
-:global(.recipe-post-detail h2) {
-  font-size: 1.25rem;
-  margin: 2rem 0 1rem;
+
+.recipe-post-header h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
 }
-  
-:global(.recipe-meta) {
+
+.recipe-meta {
   display: flex;
   gap: 2rem;
-  justify-content: center;
   margin-bottom: 2rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   color: #666;
 }
-  
-:global(.recipe-description) {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #444;
-  max-width: 800px;
-  margin: 0 auto;
+
+.recipe-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
-  
+
+.recipe-content > div {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.recipe-content h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.recipe-post-description p {
+  color: #4B5563;
+  line-height: 1.6;
+}
+
+.recipe-ingredients ul {
+  list-style: none;
+  padding: 0;
+}
+
+.recipe-ingredients li {
+  color: #4B5563;
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.recipe-instructions p {
+  color: #4B5563;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.recipe-appliances ul {
+  list-style: none;
+  padding: 0;
+}
+
+.recipe-appliances li {
+  color: #4B5563;
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.recipe-image-container {
+  margin-bottom: 2rem;
+}
+
+.recipe-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
   .recipe-post-detail {
     padding: 1rem;
   }
-  
-  :global(.recipe-post-detail h1) {
-    font-size: 1.75rem;
+
+  .recipe-post-header h1 {
+    font-size: 2rem;
+  }
+
+  .recipe-meta {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .recipe-content > div {
+    padding: 1.5rem;
   }
 } 
